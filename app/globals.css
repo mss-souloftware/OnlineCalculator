@@ -1,26 +1,133 @@
 @import "tailwindcss";
 
+/*
+ * ONLINE CALCULATOR.tools — brand theme system.
+ *
+ * Tokens are CSS variables so the whole UI re-themes by swapping their values.
+ * `:root` holds the DARK system (the default). `.light` overrides them with the
+ * LIGHT system. next-themes toggles the `light`/`dark` class on <html>.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --background: #09090b; /* Deep base canvas */
+  --surface: #0e0e11; /* Slightly raised section background */
+  --card: #18181b; /* Elevated component cards */
+  --card-hover: #1f1f23;
+  --border: #27272a; /* 1px solid hairline */
+  --border-strong: #3f3f46;
+
+  --foreground: #fafafa; /* Off-white primary text */
+  --muted-foreground: #a1a1aa; /* Zinc muted text */
+  --faint-foreground: #71717a;
+
+  --primary: #10b981; /* Emerald */
+  --primary-to: #34d399; /* Mint (gradient end) */
+  --primary-foreground: #09090b; /* Dark text on emerald (dark mode) */
+  --ring: #10b981;
+
+  --grid-dot: rgba(255, 255, 255, 0.04);
+}
+
+.light {
+  color-scheme: light;
+
+  --background: #f8fafc; /* App background */
+  --surface: #f1f5f9; /* Section background */
+  --card: #ffffff; /* Pure white cards */
+  --card-hover: #f8fafc;
+  --border: #e5e7eb; /* Light grey hairline */
+  --border-strong: #cbd5e1;
+
+  --foreground: #111827; /* Slate text */
+  --muted-foreground: #475569;
+  --faint-foreground: #64748b;
+
+  --primary: #10b981;
+  --primary-to: #34d399;
+  --primary-foreground: #ffffff; /* White text on emerald (light mode) */
+  --ring: #10b981;
+
+  --grid-dot: rgba(2, 6, 23, 0.06);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted-foreground);
+  --color-faint: var(--faint-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-to: var(--primary-to);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+
+  /* Brand typography: Plus Jakarta Sans (display), Inter (UI), Roboto Mono. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-inter), sans-serif;
+  --font-mono: var(--font-roboto-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings default to the geometric display face. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+/* Emerald→Mint text gradient used for accent words in headings. */
+.text-gradient {
+  background-image: linear-gradient(
+    to top,
+    var(--primary) 0%,
+    var(--primary-to) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft emerald glow behind heroes. */
+.hero-glow {
+  background: radial-gradient(
+    60% 60% at 50% 0%,
+    rgba(16, 185, 129, 0.16) 0%,
+    rgba(16, 185, 129, 0) 70%
+  );
+}
+
+/* Subtle dotted grid texture for section backgrounds (theme-aware dot). */
+.grid-texture {
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.3);
+  color: #fff;
+}
+
+/* Accessible focus ring for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
