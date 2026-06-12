@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { PopularCalculators } from "@/components/home/PopularCalculators";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
@@ -9,6 +10,11 @@ import { calculatorHref, calculators, faqs } from "@/content/calculators";
 
 const SITE_URL = "https://onlinecalculator.tools";
 
+// Self-referencing canonical (the root layout no longer defaults one).
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
 // WebSite schema with a SearchAction enables a sitelinks search box in Google.
 const websiteSchema = {
   "@context": "https://schema.org",
@@ -19,7 +25,7 @@ const websiteSchema = {
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: `${SITE_URL}/calculators?q={search_term_string}`,
+      urlTemplate: `${SITE_URL}/browse?q={search_term_string}`,
     },
     "query-input": "required name=search_term_string",
   },

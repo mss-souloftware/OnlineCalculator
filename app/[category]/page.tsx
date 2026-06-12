@@ -15,7 +15,9 @@ import { absoluteUrl, breadcrumbJsonLd } from "@/lib/seo";
 
 type Params = { params: Promise<{ category: string }> };
 
-// Pre-render every category at build time.
+// Pre-render every category at build time; reject any other top-level slug.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return categories.map((c) => ({ category: c.slug }));
 }
@@ -30,8 +32,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: `/calculators/${cat.slug}` },
-    openGraph: { title, description, url: absoluteUrl(`/calculators/${cat.slug}`) },
+    alternates: { canonical: `/${cat.slug}` },
+    openGraph: { title, description, url: absoluteUrl(`/${cat.slug}`) },
   };
 }
 
@@ -45,8 +47,8 @@ export default async function CategoryPage({ params }: Params) {
 
   const breadcrumb = [
     { name: "Home", path: "/" },
-    { name: "All Calculators", path: "/calculators" },
-    { name: `${cat.name} Calculators`, path: `/calculators/${cat.slug}` },
+    { name: "All Calculators", path: "/browse" },
+    { name: `${cat.name} Calculators`, path: `/${cat.slug}` },
   ];
 
   const itemListSchema = {
@@ -73,7 +75,7 @@ export default async function CategoryPage({ params }: Params) {
         icon={cat.icon}
         breadcrumb={[
           { label: "Home", href: "/" },
-          { label: "All Calculators", href: "/calculators" },
+          { label: "All Calculators", href: "/browse" },
           { label: cat.name },
         ]}
       />
@@ -94,7 +96,7 @@ export default async function CategoryPage({ params }: Params) {
             {others.map((o) => (
               <Link
                 key={o.slug}
-                href={`/calculators/${o.slug}`}
+                href={`/${o.slug}`}
                 className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/50"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">

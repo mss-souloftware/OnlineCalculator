@@ -11,7 +11,7 @@ import { categories } from "@/content/calculators";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/calculators", label: "All Calculators" },
+  { href: "/browse", label: "All Calculators" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -43,7 +43,7 @@ export function Navbar() {
                 {categories.map((cat) => (
                   <li key={cat.slug}>
                     <Link
-                      href={`/calculators/${cat.slug}`}
+                      href={`/${cat.slug}`}
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-card-hover hover:text-foreground"
                     >
                       <Icon
@@ -74,7 +74,7 @@ export function Navbar() {
           <GlobalSearch size="navbar" className="w-56 lg:w-64" />
           <ThemeToggle />
           <Link
-            href="/calculators"
+            href="/browse"
             className={buttonVariants({ variant: "primary", size: "sm" })}
           >
             Browse All
@@ -107,7 +107,7 @@ export function Navbar() {
             {categories.map((cat) => (
               <li key={cat.slug}>
                 <Link
-                  href={`/calculators/${cat.slug}`}
+                  href={`/${cat.slug}`}
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted hover:bg-card hover:text-foreground"
                 >
@@ -130,7 +130,7 @@ export function Navbar() {
             ))}
           </ul>
           <Link
-            href="/calculators"
+            href="/browse"
             onClick={() => setOpen(false)}
             className={cn(
               buttonVariants({ variant: "primary", size: "md" }),

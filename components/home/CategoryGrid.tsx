@@ -68,7 +68,7 @@ export function CategoryGrid() {
                 </ul>
 
                 <Link
-                  href={`/calculators/${cat.slug}`}
+                  href={`/${cat.slug}`}
                   className="mt-5 inline-flex items-center gap-2 border-t border-border pt-4 text-sm font-medium text-primary transition-colors hover:text-primary-to"
                 >
                   Browse {cat.name}

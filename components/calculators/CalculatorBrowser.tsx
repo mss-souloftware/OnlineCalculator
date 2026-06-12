@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   calculators,
   categories,
@@ -29,6 +29,13 @@ const tabs: { value: Filter; label: string; icon: string }[] = [
 export function CalculatorBrowser() {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
+
+  // Hydrate the search from a ?q= param (the schema SearchAction target),
+  // without opting the page out of static rendering.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setQuery(q);
+  }, []);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

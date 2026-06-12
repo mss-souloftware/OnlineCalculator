@@ -27,14 +27,14 @@ export function Cta() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/calculators"
+              href="/browse"
               className={buttonVariants({ variant: "primary", size: "lg" })}
             >
               <Icon name="fa-calculator" />
               Browse all calculators
             </Link>
             <Link
-              href="/calculators/financial"
+              href="/financial"
               className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}
             >
               Explore financial tools

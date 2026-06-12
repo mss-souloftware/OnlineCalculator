@@ -9,7 +9,7 @@ export function PopularCalculators() {
         eyebrow="Most used"
         title="Popular calculators"
         description="The tools people reach for every day — tuned for speed and accuracy."
-        action={{ href: "/calculators", label: "View all calculators" }}
+        action={{ href: "/browse", label: "View all calculators" }}
       />
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

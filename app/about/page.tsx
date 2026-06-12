@@ -146,7 +146,7 @@ export default function AboutPage() {
               Request a calculator
             </Link>
             <Link
-              href="/calculators"
+              href="/browse"
               className={buttonVariants({ variant: "secondary", size: "md" })}
             >
               Browse all calculators

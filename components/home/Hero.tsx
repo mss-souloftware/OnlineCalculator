@@ -35,7 +35,7 @@ export function Hero() {
           {categories.map((cat) => (
             <Link
               key={cat.slug}
-              href={`/calculators/${cat.slug}`}
+              href={`/${cat.slug}`}
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-primary/50 hover:text-foreground"
             >
               <Icon name={cat.icon} className="text-xs text-primary" />

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Clarity } from "@/components/analytics/Clarity";
 
 // Brand typography — Plus Jakarta Sans (display), Inter (UI), Roboto Mono (data).
 const jakarta = Plus_Jakarta_Sans({
@@ -46,7 +47,6 @@ export const metadata: Metadata = {
   ],
   applicationName: "Online Calculator.tools",
   authors: [{ name: "Online Calculator.tools" }],
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE_URL,
@@ -99,6 +99,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
         </ThemeProvider>
+        <Clarity />
       </body>
     </html>
   );
