@@ -45,12 +45,18 @@ export function amortize(
   }
   if (!Number.isFinite(monthlyPayment)) monthlyPayment = 0;
 
+  // Walk month-by-month, grouping into years. Handles a partial final year
+  // (e.g. a 30-month term → years of 12, 12, 6 months).
   const schedule: AmortizationYear[] = [];
   let balance = loanAmount;
-  for (let year = 1; year <= termYears && balance > 0.005; year++) {
+  let monthsRemaining = n;
+  let year = 0;
+  while (monthsRemaining > 0 && balance > 0.005) {
+    year++;
+    const monthsThisYear = Math.min(12, monthsRemaining);
     let principalPaid = 0;
     let interestPaid = 0;
-    for (let m = 0; m < 12 && balance > 0.005; m++) {
+    for (let m = 0; m < monthsThisYear && balance > 0.005; m++) {
       const interest = balance * r;
       let principal = monthlyPayment - interest;
       if (principal > balance) principal = balance;
@@ -58,6 +64,7 @@ export function amortize(
       interestPaid += interest;
       principalPaid += principal;
     }
+    monthsRemaining -= monthsThisYear;
     schedule.push({
       year,
       principalPaid,

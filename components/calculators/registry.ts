@@ -4,6 +4,14 @@ import { LoanCalculator } from "@/components/calculators/loan/LoanCalculator";
 import { CompoundInterestCalculator } from "@/components/calculators/compound-interest/CompoundInterestCalculator";
 import { InvestmentCalculator } from "@/components/calculators/investment/InvestmentCalculator";
 import { SavingsCalculator } from "@/components/calculators/savings/SavingsCalculator";
+import { EmiCalculator } from "@/components/calculators/emi/EmiCalculator";
+import { CreditCardPayoffCalculator } from "@/components/calculators/credit-card-payoff/CreditCardPayoffCalculator";
+import { RetirementCalculator } from "@/components/calculators/retirement/RetirementCalculator";
+import { BmiCalculator } from "@/components/calculators/bmi/BmiCalculator";
+import { BmrCalculator } from "@/components/calculators/bmr/BmrCalculator";
+import { CalorieCalculator } from "@/components/calculators/calorie/CalorieCalculator";
+import { BodyFatCalculator } from "@/components/calculators/body-fat/BodyFatCalculator";
+import { IdealWeightCalculator } from "@/components/calculators/ideal-weight/IdealWeightCalculator";
 
 /**
  * Maps a calculator slug to its interactive component. Calculators are built
@@ -18,4 +26,12 @@ export const calculatorComponents: Record<string, ComponentType> = {
   "compound-interest-calculator": CompoundInterestCalculator,
   "investment-calculator": InvestmentCalculator,
   "savings-calculator": SavingsCalculator,
+  "emi-calculator": EmiCalculator,
+  "credit-card-payoff-calculator": CreditCardPayoffCalculator,
+  "retirement-calculator": RetirementCalculator,
+  "bmi-calculator": BmiCalculator,
+  "bmr-calculator": BmrCalculator,
+  "calorie-calculator": CalorieCalculator,
+  "body-fat-calculator": BodyFatCalculator,
+  "ideal-weight-calculator": IdealWeightCalculator,
 };

@@ -1,55 +1,29 @@
-/**
- * Static content source-of-truth for the platform.
- *
- * Per the implementation plan, calculator *formulas* live in code
- * (`lib/calculatorEngine/`). This file holds only *metadata* — names, slugs,
- * categories, SEO copy and the Font Awesome icon used in the UI. It powers the
- * homepage category grid, the popular list and the client-side instant search.
- *
- * SEO SOP: every calculator carries explicit `metaTitle` + `metaDescription`
- * (consumed by `generateMetadata`) — titles/descriptions are never hardcoded
- * in page components.
- */
+
 
 export type CategorySlug = "financial" | "health" | "math" | "date-time";
 
 export type Badge = "Popular" | "New" | "Updated";
 
 export interface Calculator {
-  /** URL-safe identifier, e.g. "mortgage-calculator". */
   slug: string;
-  /** Display name. */
   name: string;
-  /** Owning category. */
   category: CategorySlug;
-  /** One-line description used on cards and in search results. */
   description: string;
-  /** SEO <title> for the calculator page. */
   metaTitle: string;
-  /** SEO <meta name="description"> for the calculator page. */
   metaDescription: string;
-  /** Font Awesome 6 icon class, e.g. "fa-house". */
   icon: string;
-  /** Search keywords beyond the visible name/description. */
   keywords: string[];
-  /** Optional marketing badge shown on the card. */
   badge?: Badge;
-  /** Whether the calculator is featured in the "Popular" section. */
   popular?: boolean;
-  /** Long-form SEO body content shown beneath the tool (paragraphs split on \n\n). */
   longDescription?: string;
-  /** Page-specific FAQs (also power FAQPage structured data). */
   faqs?: { q: string; a: string }[];
 }
 
 export interface Category {
   slug: CategorySlug;
   name: string;
-  /** Short tagline for the category hub card. */
   tagline: string;
-  /** Font Awesome 6 icon class for the category. */
   icon: string;
-  /** Accent gradient used on the category card icon. */
   accent: string;
 }
 
@@ -164,6 +138,26 @@ export const calculators: Calculator[] = [
       "Work out your loan EMI in seconds. Enter principal, interest rate and tenure to see your monthly instalment and total interest — free and instant.",
     icon: "fa-file-invoice-dollar",
     keywords: ["instalment", "tenure", "interest"],
+    longDescription:
+      "EMI stands for Equated Monthly Instalment — the fixed amount you pay your lender every month until a loan is fully repaid. Each EMI covers part of the interest and part of the principal, with the split shifting toward principal over time. This calculator works out your EMI from the loan amount, interest rate and tenure, and shows the total interest and total amount payable.\n\nThree numbers decide your EMI: the principal, the annual interest rate, and the tenure in months. A longer tenure lowers each month's EMI but increases the total interest you pay; a shorter tenure does the opposite. The amortization schedule shows exactly how your balance falls year by year.\n\nThis is the same math used for home, car, personal and business loans — only the terminology differs.",
+    faqs: [
+      {
+        q: "What is EMI?",
+        a: "EMI (Equated Monthly Instalment) is the fixed monthly payment that repays a loan over its tenure. It combines interest on the outstanding balance with a portion of the principal, calculated so the loan clears exactly at the end of the term.",
+      },
+      {
+        q: "How is EMI calculated?",
+        a: "EMI = P × r × (1+r)^n / ((1+r)^n − 1), where P is the principal, r is the monthly interest rate (annual rate ÷ 12 ÷ 100) and n is the tenure in months. This calculator does the math for you instantly.",
+      },
+      {
+        q: "Does a longer tenure reduce my EMI?",
+        a: "Yes — a longer tenure spreads the principal over more months, lowering each EMI. But because interest accrues for longer, you pay more in total. Pick the shortest tenure whose EMI fits your budget.",
+      },
+      {
+        q: "What's the difference between EMI and a loan calculator?",
+        a: "None mathematically — both use the same amortization formula. “EMI” is the common term in many countries for a loan instalment, and this tool lets you set the tenure directly in months.",
+      },
+    ],
   },
   {
     slug: "compound-interest-calculator",
@@ -242,6 +236,26 @@ export const calculators: Calculator[] = [
       "Find out how long to clear your credit card and the total interest you'll pay. Free payoff calculator based on balance, APR and monthly payment.",
     icon: "fa-credit-card",
     keywords: ["debt", "apr", "balance", "payoff"],
+    longDescription:
+      "Paying only the minimum on a credit card can keep you in debt for years and cost a fortune in interest. This calculator shows the reality: enter your balance, APR and the fixed amount you can pay each month, and it tells you exactly how long until you're debt-free and how much interest you'll pay along the way.\n\nInterest is charged on your remaining balance every month, so the faster you pay, the less interest accrues. Increasing your monthly payment even slightly can cut months — or years — off your payoff time. If your payment is lower than the monthly interest, the balance will actually grow; the calculator flags this so you know the minimum you need to make progress.\n\nUse it to set a realistic payoff plan, or to see how much a higher payment would save you.",
+    faqs: [
+      {
+        q: "How long will it take to pay off my credit card?",
+        a: "It depends on your balance, APR and monthly payment. Enter all three and the calculator returns the exact number of months, assuming you make the same fixed payment each month and add no new charges.",
+      },
+      {
+        q: "Why might my balance never get paid off?",
+        a: "If your monthly payment is less than or equal to the interest charged that month, none of it reduces the principal — so the balance stays flat or grows. The calculator warns you when this happens and shows the minimum payment needed to make progress.",
+      },
+      {
+        q: "How can I pay off my card faster?",
+        a: "Pay more than the minimum, pay more often, or move the balance to a lower-APR card or a 0% transfer. Even a small increase in your monthly payment can dramatically cut both the payoff time and the total interest.",
+      },
+      {
+        q: "Does this assume I stop using the card?",
+        a: "Yes. The projection assumes no new purchases and a fixed monthly payment. Any new spending will extend the payoff time and increase the interest you pay.",
+      },
+    ],
   },
   {
     slug: "investment-calculator",
@@ -287,6 +301,26 @@ export const calculators: Calculator[] = [
       "Project your retirement savings and the monthly income it could provide. Free retirement calculator with instant, real-time projections.",
     icon: "fa-umbrella-beach",
     keywords: ["pension", "corpus", "401k", "nest egg"],
+    longDescription:
+      "A retirement calculator projects how much you could have saved by the time you retire, and roughly how much monthly income that nest egg could provide. Enter your age, target retirement age, current savings, monthly contributions and an expected return, and it compounds everything forward to your retirement date.\n\nTime is your most powerful asset: because returns compound, contributions made in your 20s and 30s can grow far more than the same amount saved later. The estimated monthly income uses a withdrawal rate — the 4% “rule of thumb” suggests you can withdraw about 4% of your savings in the first year of retirement with a good chance of not running out, though the right figure depends on your situation.\n\nThis is a planning estimate, not a guarantee. It doesn't model inflation, taxes or market volatility in detail — treat it as a starting point and revisit it regularly.",
+    faqs: [
+      {
+        q: "How much do I need to retire?",
+        a: "A common guideline is to aim for savings that replace 70–80% of your pre-retirement income. Using the 4% rule, that often means a nest egg of roughly 25× your desired annual spending. This calculator projects your nest egg so you can compare it against your target.",
+      },
+      {
+        q: "What is the 4% rule?",
+        a: "The 4% rule suggests retirees can withdraw about 4% of their savings in the first year, then adjust for inflation, with a reasonable chance the money lasts around 30 years. It's a rough planning heuristic, not a guarantee — lower the withdrawal rate to be more conservative.",
+      },
+      {
+        q: "What return rate should I assume?",
+        a: "Use a realistic long-term average for your investment mix. Many planners use roughly 6–8% before inflation for a diversified portfolio, then a lower figure for safety. Returns aren't guaranteed, so test a few scenarios.",
+      },
+      {
+        q: "Does this account for inflation and taxes?",
+        a: "No. The projection shows nominal values before tax and without adjusting for inflation, so your future purchasing power will be lower than the headline figure. Factor those in when planning, and consider professional advice.",
+      },
+    ],
   },
 
   // ── Health & Fitness ───────────────────────────────────────────────────
@@ -303,6 +337,26 @@ export const calculators: Calculator[] = [
     keywords: ["body mass index", "weight", "height"],
     badge: "Popular",
     popular: true,
+    longDescription:
+      "Body Mass Index (BMI) is a quick screening number that relates your weight to your height. It's calculated as your weight in kilograms divided by the square of your height in metres, and it sorts adults into ranges: underweight (below 18.5), normal (18.5–24.9), overweight (25–29.9) and obese (30 and above).\n\nBMI is popular because it's simple and a reasonable indicator of body-fat-related health risk across a population. But it's a blunt tool for individuals: it can't tell muscle from fat, so very muscular people may register as “overweight”, and it doesn't account for age, sex, ethnicity or where you carry weight. Use it as a starting point, not a verdict.\n\nThis calculator works in both metric and imperial units and shows the healthy weight range for your height, so you can see how far you are from the normal band.",
+    faqs: [
+      {
+        q: "How is BMI calculated?",
+        a: "BMI = weight (kg) ÷ height (m)². In imperial units it's weight (lb) ÷ height (in)² × 703. This calculator handles the conversion for you whichever units you enter.",
+      },
+      {
+        q: "What is a healthy BMI?",
+        a: "For most adults a BMI between 18.5 and 24.9 is considered the healthy range. Below 18.5 is underweight, 25–29.9 is overweight, and 30 or above is classed as obese.",
+      },
+      {
+        q: "Is BMI accurate for everyone?",
+        a: "No. BMI doesn't distinguish muscle from fat, so athletes can read as overweight, and it doesn't adjust for age, sex, ethnicity or fat distribution. It's a screening tool — for a fuller picture consider body-fat percentage and a chat with a clinician.",
+      },
+      {
+        q: "Does BMI work differently for children?",
+        a: "Yes. For children and teens, BMI is interpreted using age- and sex-specific percentiles rather than the fixed adult ranges. This calculator is intended for adults.",
+      },
+    ],
   },
   {
     slug: "bmr-calculator",
@@ -315,6 +369,26 @@ export const calculators: Calculator[] = [
       "Calculate your Basal Metabolic Rate (BMR) — the calories you burn at rest. Free, instant BMR calculator using weight, height, age and gender.",
     icon: "fa-fire",
     keywords: ["metabolism", "calories", "rest"],
+    longDescription:
+      "Your Basal Metabolic Rate (BMR) is the number of calories your body burns at complete rest just to keep you alive — powering your heart, brain, lungs and other organs. It typically accounts for 60–70% of the calories you use each day, which makes it the foundation of any calorie plan, whether you want to lose, maintain or gain weight.\n\nThis calculator uses the Mifflin-St Jeor equation, the formula most dietitians consider the most accurate for the general population. It factors in your weight, height, age and sex. To estimate the calories you actually burn in a day (your TDEE, or maintenance calories), multiply your BMR by an activity factor — the table shows all five levels so you can pick the one that matches your lifestyle.\n\nOnce you know your maintenance number, eating below it tends to lead to weight loss and above it to weight gain — roughly 3,500 calories per pound of body weight.",
+    faqs: [
+      {
+        q: "What's the difference between BMR and TDEE?",
+        a: "BMR is the calories you burn at rest. TDEE (Total Daily Energy Expenditure) is your BMR multiplied by an activity factor — the total you burn including movement and exercise. The activity table on this page shows your TDEE at each level.",
+      },
+      {
+        q: "Which formula does this use?",
+        a: "The Mifflin-St Jeor equation, widely regarded as the most accurate BMR formula for most people. For men: 10×weight(kg) + 6.25×height(cm) − 5×age + 5; for women the final constant is −161 instead of +5.",
+      },
+      {
+        q: "How do I use my BMR to lose weight?",
+        a: "Find your maintenance calories (BMR × activity factor), then eat below it to lose weight. A deficit of roughly 500 calories a day is a common, sustainable target for about a pound of loss per week — but consult a professional for personalised advice.",
+      },
+      {
+        q: "Why does BMR fall with age?",
+        a: "Metabolism tends to slow as we age, partly due to muscle loss. The formula reflects this by subtracting more for older ages, so an older person generally has a lower BMR than a younger person of the same size.",
+      },
+    ],
   },
   {
     slug: "calorie-calculator",
@@ -328,6 +402,26 @@ export const calculators: Calculator[] = [
     icon: "fa-utensils",
     keywords: ["diet", "macros", "tdee", "nutrition"],
     popular: true,
+    longDescription:
+      "A calorie calculator estimates how many calories you should eat each day to reach a goal — lose, maintain or gain weight. It starts from your Basal Metabolic Rate (the energy your body uses at rest), multiplies it by an activity factor to get your maintenance calories (TDEE), then applies a deficit or surplus for your goal.\n\nWeight change comes down to energy balance: eat fewer calories than you burn and you lose weight; eat more and you gain. A pound of body fat is roughly 3,500 calories, so a daily deficit of 500 calories targets about a pound of loss per week. This tool also splits your target into protein, carbs and fat, with presets for balanced, low-carb and high-protein diets.\n\nThese are estimates based on the Mifflin-St Jeor equation; your real needs depend on body composition, genetics and how active you truly are, so adjust based on results.",
+    faqs: [
+      {
+        q: "How many calories should I eat to lose weight?",
+        a: "Eat below your maintenance (TDEE) calories. A deficit of about 500 calories a day targets roughly a pound (0.5 kg) of loss per week and is sustainable for most people. Aggressive deficits work faster but are harder to keep up and can cost muscle.",
+      },
+      {
+        q: "What is TDEE?",
+        a: "Total Daily Energy Expenditure is the total calories you burn in a day — your BMR multiplied by an activity factor for movement and exercise. It's your maintenance level: eat at it to keep your weight stable.",
+      },
+      {
+        q: "How should I split my macros?",
+        a: "A balanced 30% protein / 40% carbs / 30% fat split works for most people. Higher protein supports muscle retention while dieting; lower-carb suits some people for appetite control. This calculator offers presets so you can compare.",
+      },
+      {
+        q: "Are these calorie numbers exact?",
+        a: "No — they're well-established estimates. Metabolism varies between individuals and activity is hard to gauge precisely. Use the figure as a starting point, track your weight for a few weeks, then adjust based on what actually happens.",
+      },
+    ],
   },
   {
     slug: "body-fat-calculator",
@@ -340,6 +434,26 @@ export const calculators: Calculator[] = [
       "Estimate your body fat percentage using the trusted U.S. Navy method. Free body fat calculator with instant results and your category.",
     icon: "fa-person",
     keywords: ["navy method", "waist", "neck", "composition"],
+    longDescription:
+      "This calculator estimates your body fat percentage using the U.S. Navy circumference method — a tape-measure technique the military uses because it's quick, free and reasonably accurate. It compares measurements of your neck and waist (and hips for women) against your height to estimate the proportion of your weight that is fat.\n\nBody fat percentage is often more useful than BMI because it distinguishes fat from muscle. Two people can share a BMI but have very different body compositions. The result is placed into categories — essential fat, athletes, fitness, average and obese — which differ between men and women because women naturally carry more essential fat.\n\nFor the most accurate reading, measure with a flexible tape kept snug but not tight, and take each measurement at the same point a couple of times. This is an estimate; methods like DEXA scans are more precise but far less convenient.",
+    faqs: [
+      {
+        q: "How do I measure for the Navy method?",
+        a: "Measure your neck just below the larynx and your waist at the navel (men); women also measure the hips at their widest point. Keep the tape level and snug, enter the figures with your height, and the calculator does the rest.",
+      },
+      {
+        q: "Is the Navy method accurate?",
+        a: "It's a good practical estimate, typically within a few percent of more advanced methods for most people, though less reliable at the extremes of body composition. For clinical accuracy, a DEXA scan or hydrostatic weighing is the gold standard.",
+      },
+      {
+        q: "Why are the categories different for men and women?",
+        a: "Women naturally carry more essential body fat — needed for hormonal and reproductive health — so the healthy ranges sit higher than for men. The calculator applies the appropriate category bands based on the sex you select.",
+      },
+      {
+        q: "What's a healthy body fat percentage?",
+        a: "For men the 'fitness' range is roughly 14–17% and 'average' 18–24%; for women it's about 21–24% and 25–31%. Athletes sit below these, and very low body fat can be unhealthy. Context and individual goals matter.",
+      },
+    ],
   },
   {
     slug: "ideal-weight-calculator",
@@ -352,6 +466,26 @@ export const calculators: Calculator[] = [
       "See your ideal weight range across four established medical formulas. Free ideal weight calculator based on height, gender and frame.",
     icon: "fa-scale-balanced",
     keywords: ["healthy weight", "frame", "robinson", "devine"],
+    longDescription:
+      "There's no single “ideal” weight, but several long-standing clinical formulas estimate a healthy weight from your height and sex. This calculator runs four of the best-known — Robinson, Miller, Devine and Hamwi — and shows the range they produce along with an average, so you get a realistic band rather than a false-precision single number.\n\nAll four are based on height: each adds a set amount of weight per inch above five feet, with slightly different constants. Because they were derived decades ago for medication dosing and population health, they don't account for muscle mass, age or body composition — a muscular athlete may sit “above” their ideal weight while being perfectly healthy. The frame-size option nudges the estimate to reflect smaller or larger builds.\n\nFor context, the calculator also shows the healthy weight range from BMI. Treat all of these as guides, not goals.",
+    faqs: [
+      {
+        q: "Which ideal weight formula is best?",
+        a: "There's no clear winner — Robinson and Devine are the most widely cited clinically. Rather than pick one, this calculator shows all four and their average so you can see a realistic range for your height.",
+      },
+      {
+        q: "Does ideal weight depend on age?",
+        a: "These classic formulas use only height and sex, not age. Healthy weight can shift with age and muscle mass, so treat the result as a general reference. The BMI-based range shown is similarly age-independent for adults.",
+      },
+      {
+        q: "What is body frame size?",
+        a: "Frame size describes your skeletal build — small, medium or large. People with larger frames healthily carry more weight at the same height. This calculator adjusts the average by about ±10% for small and large frames.",
+      },
+      {
+        q: "Should I aim for my 'ideal weight'?",
+        a: "Not necessarily. These figures are population averages for medical reference, not personal targets. Your healthiest weight depends on body composition, fitness and health markers — worth discussing with a professional.",
+      },
+    ],
   },
 
   // ── Math & Algebra ─────────────────────────────────────────────────────
@@ -449,25 +583,20 @@ export const calculators: Calculator[] = [
   },
 ];
 
-/** Calculators flagged for the homepage "Popular" section. */
 export const popularCalculators = calculators.filter((c) => c.popular);
 
-/** Count of calculators in a given category. */
 export function countByCategory(slug: CategorySlug): number {
   return calculators.filter((c) => c.category === slug).length;
 }
 
-/** Look up a category by its slug (returns undefined for unknown slugs). */
 export function getCategory(slug: string): Category | undefined {
   return categories.find((c) => c.slug === slug);
 }
 
-/** All calculators belonging to a category. */
 export function calculatorsByCategory(slug: CategorySlug): Calculator[] {
   return calculators.filter((c) => c.category === slug);
 }
 
-/** Look up a calculator by category + slug. */
 export function getCalculator(
   category: string,
   slug: string,
@@ -475,17 +604,13 @@ export function getCalculator(
   return calculators.find((c) => c.category === category && c.slug === slug);
 }
 
-/**
- * Canonical path to a calculator page.
- * SOP: `/[category]/[slug]` — no redundant `/calculators/` folder.
- */
+
 export function calculatorHref(
   c: Pick<Calculator, "category" | "slug">,
 ): string {
   return `/${c.category}/${c.slug}`;
 }
 
-/** SEO title/description for a calculator (single accessor for generateMetadata). */
 export function getCalculatorMeta(c: Calculator): {
   title: string;
   description: string;
@@ -493,7 +618,6 @@ export function getCalculatorMeta(c: Calculator): {
   return { title: c.metaTitle, description: c.metaDescription };
 }
 
-/** Lightweight, dependency-free instant search over the calculator catalog. */
 export function searchCalculators(query: string, limit = 6): Calculator[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
@@ -516,7 +640,6 @@ export function searchCalculators(query: string, limit = 6): Calculator[] {
     .map((r) => r.c);
 }
 
-/** Headline platform metrics shown in the hero stat bar. */
 export const siteStats = [
   { label: "Calculators", value: calculators.length, suffix: "+", icon: "fa-calculator" },
   { label: "Categories", value: categories.length, suffix: "", icon: "fa-layer-group" },
@@ -524,7 +647,6 @@ export const siteStats = [
   { label: "Cost to use", value: 0, suffix: "", prefix: "$", icon: "fa-tag" },
 ] as const;
 
-/** Homepage FAQ — also feeds FAQPage JSON-LD for rich results. */
 export const faqs = [
   {
     q: "Are these calculators really free to use?",
