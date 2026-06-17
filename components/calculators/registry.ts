@@ -12,6 +12,9 @@ import { BmrCalculator } from "@/components/calculators/bmr/BmrCalculator";
 import { CalorieCalculator } from "@/components/calculators/calorie/CalorieCalculator";
 import { BodyFatCalculator } from "@/components/calculators/body-fat/BodyFatCalculator";
 import { IdealWeightCalculator } from "@/components/calculators/ideal-weight/IdealWeightCalculator";
+import { ScientificCalculator } from "@/components/calculators/scientific/ScientificCalculator";
+import { FractionCalculator } from "@/components/calculators/fraction/FractionCalculator";
+import { PercentageCalculator } from "@/components/calculators/percentage/PercentageCalculator";
 
 /**
  * Maps a calculator slug to its interactive component. Calculators are built
@@ -34,4 +37,7 @@ export const calculatorComponents: Record<string, ComponentType> = {
   "calorie-calculator": CalorieCalculator,
   "body-fat-calculator": BodyFatCalculator,
   "ideal-weight-calculator": IdealWeightCalculator,
+  "scientific-calculator": ScientificCalculator,
+  "fraction-calculator": FractionCalculator,
+  "percentage-calculator": PercentageCalculator,
 };

@@ -502,6 +502,30 @@ export const calculators: Calculator[] = [
     keywords: ["trigonometry", "logarithm", "expression"],
     badge: "Popular",
     popular: true,
+    longDescription:
+      "A scientific calculator goes well beyond the four basic operations, handling the functions you need for algebra, trigonometry, statistics and science homework. This one evaluates a full expression at once — type something like “2×sin(30)+√(16)” and it parses the whole thing using the correct order of operations, so you don't have to break the calculation into steps.\n\nIt supports parentheses, powers and roots (including the nth root), factorials, percentages and modulo, the constants π and e, and a full set of functions: sine, cosine and tangent with their inverses, the hyperbolic functions (sinh, cosh, tanh) via the hyp key, natural and base-10 logarithms, exponentials, reciprocal (1/x), absolute value, and permutations and combinations (nPr and nCr). Trigonometry works in either degrees or radians — switch the angle mode before you calculate. Results appear live as you type, and pressing equals stores the calculation in your history so you can revisit or reuse it.\n\nYou can drive everything from your keyboard as well as the on-screen keys, and the calculator understands implicit multiplication, so “2π” and “3(4+1)” work exactly as you'd write them by hand.",
+    faqs: [
+      {
+        q: "How do I switch between degrees and radians?",
+        a: "Use the DEG/RAD toggle above the keypad. It controls how trigonometric functions interpret angles: in DEG mode sin(30) is 0.5, while in RAD mode the same input is treated as 30 radians. Set the mode before calculating.",
+      },
+      {
+        q: "What do the INV and hyp keys do?",
+        a: "INV switches the trig and log keys to their inverse functions — sin becomes sin⁻¹ (arcsine), ln becomes eˣ, log becomes 10ˣ and √ becomes x². The hyp key switches sin, cos and tan to their hyperbolic forms (sinh, cosh, tanh), and combining hyp with INV gives the inverse hyperbolics (asinh, acosh, atanh). Together they pack the second and third functions onto each key without extra buttons.",
+      },
+      {
+        q: "How do nPr, nCr and the other extra functions work?",
+        a: "nPr and nCr are entered between two whole numbers — “5 nPr 2” counts ordered arrangements (20) and “5 nCr 2” counts unordered selections (10). The nth-root key (ʸ√x) takes the index first, so 3 then ʸ√x then 27 gives 3. There's also 1/x for reciprocals and mod for the remainder of a division, e.g. 17 mod 5 is 2.",
+      },
+      {
+        q: "Does it follow the correct order of operations?",
+        a: "Yes. The calculator evaluates the whole expression using standard precedence (parentheses, then powers, then multiplication and division, then addition and subtraction), so 2+3×4 returns 14, not 20. Use parentheses whenever you want to change the grouping.",
+      },
+      {
+        q: "Can I use my keyboard?",
+        a: "Absolutely. Number keys, + − * / and ^, parentheses, % and ! all work, Enter evaluates the expression, Backspace deletes and Escape clears. You can also click the on-screen keys — whichever you prefer.",
+      },
+    ],
   },
   {
     slug: "fraction-calculator",
@@ -514,6 +538,26 @@ export const calculators: Calculator[] = [
       "Add, subtract, multiply and divide fractions with simplified, step-by-step results. Free online fraction calculator with instant answers.",
     icon: "fa-divide",
     keywords: ["numerator", "denominator", "simplify"],
+    longDescription:
+      "A fraction calculator takes the fiddly arithmetic out of working with fractions — finding common denominators, multiplying across, flipping for division and reducing the answer to lowest terms. Enter two fractions, choose an operation, and you get the exact result as a simplified fraction, a mixed number and a decimal, along with the working that gets you there.\n\nEach value can be a simple fraction like 3/4 or a mixed number like 2 1/3 — just fill in the whole-number box. Negative fractions are fine too: put the minus sign on the whole number or the numerator. Because the calculation is done with exact integer arithmetic rather than floating-point decimals, you never lose precision to rounding, so 1/3 stays exactly one third.\n\nThe step-by-step panel shows each stage of the method — converting mixed numbers, rewriting over a common denominator, combining, and simplifying — which makes it useful for checking homework or learning the technique, not just getting an answer.",
+    faqs: [
+      {
+        q: "How do you add or subtract fractions with different denominators?",
+        a: "Rewrite both fractions over a common denominator (the lowest common multiple of the two denominators), then add or subtract the numerators and keep the denominator. Finally, reduce the result to lowest terms. The calculator shows each of these steps.",
+      },
+      {
+        q: "How do you multiply and divide fractions?",
+        a: "To multiply, multiply the numerators together and the denominators together. To divide, flip the second fraction (swap its numerator and denominator) and multiply. The answer is then simplified. No common denominator is needed for either.",
+      },
+      {
+        q: "Can I use mixed numbers and negative fractions?",
+        a: "Yes. Enter a value in the whole-number box to make a mixed number such as 2 1/3, which the calculator converts to an improper fraction first. For negatives, use a minus sign on the whole number or the numerator.",
+      },
+      {
+        q: "How is the result simplified?",
+        a: "The calculator divides the numerator and denominator by their greatest common divisor (GCD), giving the fraction in lowest terms. If the fraction is top-heavy, it also expresses it as a mixed number and as a decimal.",
+      },
+    ],
   },
   {
     slug: "percentage-calculator",
@@ -527,6 +571,26 @@ export const calculators: Calculator[] = [
     icon: "fa-percent",
     keywords: ["percent", "discount", "change"],
     popular: true,
+    longDescription:
+      "Percentages turn up everywhere — discounts, tips, tax, test scores, interest and statistics — but the wording trips people up because “percent” questions come in several shapes. This calculator handles the four most common ones in one place, and shows the working for each so the method is clear, not just the answer.\n\nUse “Percent of” to find a slice of a number (what is 15% of 200?). Use “Is what %” to express one number as a percentage of another (50 is what percent of 200?). Use “Change” to measure the percentage increase or decrease between a starting and ending value — handy for price changes, growth or weight loss. And use “Adjust” to add or take a percentage off a number, which is exactly what a discount or a markup does.\n\nEvery percentage is really just a fraction of 100: 25% means 25 per hundred, or 0.25. Once you see which of the four questions you're asking, the arithmetic is straightforward — and the step-by-step panel walks through it each time.",
+    faqs: [
+      {
+        q: "How do I calculate a percentage of a number?",
+        a: "Divide the percentage by 100 and multiply by the number. For example, 15% of 200 is (15 ÷ 100) × 200 = 0.15 × 200 = 30. The “Percent of” mode does this for you and shows each step.",
+      },
+      {
+        q: "How do I work out percentage increase or decrease?",
+        a: "Subtract the starting value from the ending value, divide by the starting value, then multiply by 100. Going from 200 to 250 is ((250 − 200) ÷ 200) × 100 = 25%, an increase. A negative result means a decrease. Use the “Change” mode for this.",
+      },
+      {
+        q: "What's the difference between “percent of” and “percentage change”?",
+        a: "“Percent of” finds a portion of a single number (15% of 200). “Percentage change” compares two numbers to see how much one grew or shrank relative to the other. They answer different questions, so the calculator keeps them as separate modes.",
+      },
+      {
+        q: "How do I add or subtract a percentage, like a discount or tax?",
+        a: "Use the “Adjust” mode. To take 20% off 50, it works out 20% of 50 (which is 10) and subtracts it, giving 40. To add tax, switch the direction to Increase. This is the same math shops use for discounts and markups.",
+      },
+    ],
   },
   {
     slug: "unit-converter",
