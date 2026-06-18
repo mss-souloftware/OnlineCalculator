@@ -603,6 +603,26 @@ export const calculators: Calculator[] = [
       "Convert length, weight, temperature, area, volume and more between metric and imperial. Free, instant online unit converter.",
     icon: "fa-ruler-combined",
     keywords: ["metric", "imperial", "conversion"],
+    longDescription:
+      "A unit converter switches a measurement from one unit to another without the mental arithmetic — metres to feet, kilograms to pounds, Celsius to Fahrenheit, and many more. This one covers eight everyday categories: length, weight and mass, temperature, area, volume, speed, time and digital storage, each with the metric and imperial (US/UK) units you actually use.\n\nMost conversions are just multiplication by a fixed factor: every unit is defined relative to a base unit for its category (the metre for length, the kilogram for mass), so converting means scaling to the base and back out to the target. Temperature is the exception — because the scales have different zero points, Celsius, Fahrenheit and Kelvin are converted with formulas rather than a single factor, which is why 0 °C is 32 °F, not zero.\n\nEnter an amount, pick the two units and read the result instantly, or use the swap button to reverse the direction. The panel also shows your amount expressed in every other unit in the category at once, which is handy for quick reference.",
+    faqs: [
+      {
+        q: "Which unit categories does this converter support?",
+        a: "Eight: length, weight/mass, temperature, area, volume, speed, time and digital storage. Each includes common metric and imperial units — for example feet, inches, miles, pounds, ounces, gallons, miles per hour and gigabytes.",
+      },
+      {
+        q: "How do I convert Celsius to Fahrenheit (and back)?",
+        a: "Multiply the Celsius value by 9/5 and add 32. So 20 °C is 20 × 9/5 + 32 = 68 °F. To go the other way, subtract 32 then multiply by 5/9. Select the Temperature category and the calculator applies the right formula automatically.",
+      },
+      {
+        q: "Is the conversion exact?",
+        a: "The factors use the internationally defined values (for instance one inch is exactly 2.54 cm), so conversions are accurate to within display rounding. Results are shown to several significant figures, switching to scientific notation for very large or very small numbers.",
+      },
+      {
+        q: "What's the difference between a kilobyte (KB) and a kibibyte (KiB)?",
+        a: "A kilobyte is 1,000 bytes (decimal) while a kibibyte is 1,024 bytes (binary). The digital-storage category includes both the decimal units (KB, MB, GB, TB) and the binary ones (KiB, MiB, GiB) so you can convert between them.",
+      },
+    ],
   },
 
   // ── Date & Time ────────────────────────────────────────────────────────

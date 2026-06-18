@@ -15,6 +15,7 @@ import { IdealWeightCalculator } from "@/components/calculators/ideal-weight/Ide
 import { ScientificCalculator } from "@/components/calculators/scientific/ScientificCalculator";
 import { FractionCalculator } from "@/components/calculators/fraction/FractionCalculator";
 import { PercentageCalculator } from "@/components/calculators/percentage/PercentageCalculator";
+import { UnitConverter } from "@/components/calculators/unit-converter/UnitConverter";
 
 /**
  * Maps a calculator slug to its interactive component. Calculators are built
@@ -40,4 +41,5 @@ export const calculatorComponents: Record<string, ComponentType> = {
   "scientific-calculator": ScientificCalculator,
   "fraction-calculator": FractionCalculator,
   "percentage-calculator": PercentageCalculator,
+  "unit-converter": UnitConverter,
 };
