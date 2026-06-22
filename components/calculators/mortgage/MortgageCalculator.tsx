@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { calculateMortgage } from "@/lib/calculatorEngine/mortgage";
+import { useUrlState } from "@/lib/useUrlState";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { RangeField } from "@/components/ui/RangeField";
 import { DonutChart } from "@/components/charts/DonutChart";
@@ -36,28 +37,27 @@ export function MortgageCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [showAll, setShowAll] = useState(false);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  // Hydrate inputs from the URL (?homePrice=…&annualRate=…) — the share state.
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    for (const key of PARAM_KEYS) {
-      const v = parseFloat(p.get(key) ?? "");
-      if (Number.isFinite(v)) next[key] = v;
-    }
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  // Mirror inputs back into the URL so the calculation is bookmarkable/shareable
-  // (SOP: inputs update URL params; no page reload).
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams();
-    for (const key of PARAM_KEYS) p.set(key, String(inputs[key]));
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate inputs from the URL (?homePrice=…&annualRate=…) and mirror changes
+  // back, so a calculation is bookmarkable/shareable. The URL only starts
+  // reflecting state once the visitor changes something (SOP: no page reload).
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      for (const key of PARAM_KEYS) {
+        const v = parseFloat(p.get(key) ?? "");
+        if (Number.isFinite(v)) next[key] = v;
+      }
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams();
+      for (const key of PARAM_KEYS) p.set(key, String(state[key]));
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(() => calculateMortgage(inputs), [inputs]);
 

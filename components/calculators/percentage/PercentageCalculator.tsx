@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import {
   calculatePercentage,
   type Direction,
@@ -71,24 +72,20 @@ function fmt(value: number, decimals = 4): string {
 export function PercentageCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    setInputs(readParams());
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      mode: inputs.mode,
-      p: String(inputs.percent),
-      x: String(inputs.value),
-      y: String(inputs.total),
-      dir: inputs.direction,
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    readParams,
+    (state) =>
+      new URLSearchParams({
+        mode: state.mode,
+        p: String(state.percent),
+        x: String(state.value),
+        y: String(state.total),
+        dir: state.direction,
+      }).toString(),
+    setInputs,
+  );
 
   const result = useMemo(() => calculatePercentage(inputs), [inputs]);
 

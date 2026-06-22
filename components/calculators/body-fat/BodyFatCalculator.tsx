@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import { calculateBodyFat, type Gender } from "@/lib/calculatorEngine/body-fat";
 import { kgToLb, type UnitSystem } from "@/lib/calculatorEngine/units";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
@@ -51,29 +52,29 @@ const CATEGORY_STYLE: Record<string, string> = {
 export function BodyFatCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    for (const key of NUM_KEYS) {
-      const v = parseFloat(p.get(key) ?? "");
-      if (Number.isFinite(v)) next[key] = v;
-    }
-    const u = p.get("unit");
-    if (u === "metric" || u === "imperial") next.unit = u;
-    const g = p.get("gender");
-    if (g === "male" || g === "female") next.gender = g;
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({ unit: inputs.unit, gender: inputs.gender });
-    for (const key of NUM_KEYS) p.set(key, inputs[key].toFixed(1));
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      for (const key of NUM_KEYS) {
+        const v = parseFloat(p.get(key) ?? "");
+        if (Number.isFinite(v)) next[key] = v;
+      }
+      const u = p.get("unit");
+      if (u === "metric" || u === "imperial") next.unit = u;
+      const g = p.get("gender");
+      if (g === "male" || g === "female") next.gender = g;
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams({ unit: state.unit, gender: state.gender });
+      for (const key of NUM_KEYS) p.set(key, state[key].toFixed(1));
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(() => calculateBodyFat(inputs), [inputs]);
 

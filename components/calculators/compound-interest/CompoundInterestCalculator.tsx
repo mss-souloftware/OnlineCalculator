@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import {
   calculateCompoundInterest,
   FREQUENCIES,
@@ -44,30 +45,30 @@ export function CompoundInterestCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [showAll, setShowAll] = useState(false);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    for (const key of NUM_KEYS) {
-      const v = parseFloat(p.get(key) ?? "");
-      if (Number.isFinite(v)) next[key] = v;
-    }
-    const freq = p.get("frequency");
-    if (freq && VALID_FREQ.has(freq as CompoundFrequency)) {
-      next.frequency = freq as CompoundFrequency;
-    }
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams();
-    for (const key of NUM_KEYS) p.set(key, String(inputs[key]));
-    p.set("frequency", inputs.frequency);
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      for (const key of NUM_KEYS) {
+        const v = parseFloat(p.get(key) ?? "");
+        if (Number.isFinite(v)) next[key] = v;
+      }
+      const freq = p.get("frequency");
+      if (freq && VALID_FREQ.has(freq as CompoundFrequency)) {
+        next.frequency = freq as CompoundFrequency;
+      }
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams();
+      for (const key of NUM_KEYS) p.set(key, String(state[key]));
+      p.set("frequency", state.frequency);
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(
     () => calculateCompoundInterest(inputs),

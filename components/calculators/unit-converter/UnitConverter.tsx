@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import {
   CATEGORIES,
   convert,
@@ -58,23 +59,19 @@ function fmt(n: number): string {
 export function UnitConverter() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    setInputs(readParams());
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      cat: inputs.categoryId,
-      from: inputs.fromId,
-      to: inputs.toId,
-      amt: String(inputs.amount),
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    readParams,
+    (state) =>
+      new URLSearchParams({
+        cat: state.categoryId,
+        from: state.fromId,
+        to: state.toId,
+        amt: String(state.amount),
+      }).toString(),
+    setInputs,
+  );
 
   const category = getCategory(inputs.categoryId)!;
   const fromUnit = category.units.find((u) => u.id === inputs.fromId)!;

@@ -16,6 +16,8 @@ import { ScientificCalculator } from "@/components/calculators/scientific/Scient
 import { FractionCalculator } from "@/components/calculators/fraction/FractionCalculator";
 import { PercentageCalculator } from "@/components/calculators/percentage/PercentageCalculator";
 import { UnitConverter } from "@/components/calculators/unit-converter/UnitConverter";
+import { AgeCalculator } from "@/components/calculators/age/AgeCalculator";
+import { DateCalculator } from "@/components/calculators/date/DateCalculator";
 
 /**
  * Maps a calculator slug to its interactive component. Calculators are built
@@ -42,4 +44,6 @@ export const calculatorComponents: Record<string, ComponentType> = {
   "fraction-calculator": FractionCalculator,
   "percentage-calculator": PercentageCalculator,
   "unit-converter": UnitConverter,
+  "age-calculator": AgeCalculator,
+  "date-calculator": DateCalculator,
 };

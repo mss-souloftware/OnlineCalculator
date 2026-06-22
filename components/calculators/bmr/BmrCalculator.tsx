@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import { calculateBmr, type Gender } from "@/lib/calculatorEngine/bmr";
 import { formatNumber } from "@/lib/format";
 import { type UnitSystem } from "@/lib/calculatorEngine/units";
@@ -32,39 +33,39 @@ const DEFAULTS: Inputs = {
 export function BmrCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    const w = parseFloat(p.get("weightKg") ?? "");
-    const h = parseFloat(p.get("heightCm") ?? "");
-    const a = parseFloat(p.get("age") ?? "");
-    const u = p.get("unit");
-    const g = p.get("gender");
-    const act = p.get("activity");
-    if (Number.isFinite(w)) next.weightKg = w;
-    if (Number.isFinite(h)) next.heightCm = h;
-    if (Number.isFinite(a)) next.age = a;
-    if (u === "metric" || u === "imperial") next.unit = u;
-    if (g === "male" || g === "female") next.gender = g;
-    if (act) next.activity = act;
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      unit: inputs.unit,
-      weightKg: inputs.weightKg.toFixed(1),
-      heightCm: inputs.heightCm.toFixed(1),
-      age: String(inputs.age),
-      gender: inputs.gender,
-      activity: inputs.activity,
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      const w = parseFloat(p.get("weightKg") ?? "");
+      const h = parseFloat(p.get("heightCm") ?? "");
+      const a = parseFloat(p.get("age") ?? "");
+      const u = p.get("unit");
+      const g = p.get("gender");
+      const act = p.get("activity");
+      if (Number.isFinite(w)) next.weightKg = w;
+      if (Number.isFinite(h)) next.heightCm = h;
+      if (Number.isFinite(a)) next.age = a;
+      if (u === "metric" || u === "imperial") next.unit = u;
+      if (g === "male" || g === "female") next.gender = g;
+      if (act) next.activity = act;
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams({
+        unit: state.unit,
+        weightKg: state.weightKg.toFixed(1),
+        heightCm: state.heightCm.toFixed(1),
+        age: String(state.age),
+        gender: state.gender,
+        activity: state.activity,
+      });
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(
     () =>

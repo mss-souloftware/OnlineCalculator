@@ -639,6 +639,26 @@ export const calculators: Calculator[] = [
     keywords: ["birthday", "date of birth", "milestones"],
     badge: "Popular",
     popular: true,
+    longDescription:
+      "An age calculator works out exactly how old someone is from their date of birth — not just in years, but in years, months and days, the way you'd actually say it. Enter a birth date and it tells you your precise age today, or on any date you choose, which is handy for forms, eligibility checks or settling a “who's older” debate.\n\nGetting age right is trickier than subtracting two years, because months have different lengths and leap years add a day every four years. This calculator counts whole months from your birth date — clamping sensibly when a month is shorter — so the result stays correct even for tricky cases like being born on the 31st or on the 29th of February. It then shows the leftover days exactly.\n\nBeyond your age, it breaks your life down into total months, weeks, days, hours and minutes, tells you which day of the week you were born on, and counts down to your next birthday — including the weekday it falls on and the age you'll turn.",
+    faqs: [
+      {
+        q: "How is my exact age calculated?",
+        a: "The calculator counts the number of complete years and months from your birth date to the chosen date, then the remaining days. It accounts for varying month lengths and leap years, so the years/months/days figure matches how age is normally stated.",
+      },
+      {
+        q: "Can I calculate my age on a future or past date?",
+        a: "Yes. By default it uses today, but you can change the “Age at the date of” field to any date — for example to find how old you'll be on a future event, or how old you were at a past one. Reset returns it to today.",
+      },
+      {
+        q: "How does it handle leap years and 29 February birthdays?",
+        a: "Leap days are counted in the totals automatically. For a 29 February birthday, in non-leap years the calculator treats 28 February as the birthday for the countdown, which is the most common convention.",
+      },
+      {
+        q: "What does “next birthday” show?",
+        a: "It shows how many days remain until your next birthday, the day of the week it falls on, and the age you'll turn. If today is your birthday, it says so.",
+      },
+    ],
   },
   {
     slug: "date-calculator",
@@ -651,6 +671,26 @@ export const calculators: Calculator[] = [
       "Add or subtract days from a date, or find the exact duration between two dates. Free, instant online date calculator.",
     icon: "fa-calendar-day",
     keywords: ["duration", "days between", "deadline"],
+    longDescription:
+      "A date calculator answers two everyday questions: how long is it between two dates, and what date falls a certain time before or after another. Use the Difference mode to count the gap between a start and end date — useful for project timelines, notice periods, pregnancy weeks, or how many days until an event. Use the Add / Subtract mode to shift a date forward or back by years, months, weeks and days — handy for deadlines, renewal dates and reminders.\n\nThe difference is shown both as a calendar duration (years, months and days, the way people naturally describe a span) and as exact totals: total days, total weeks, and the number of business days (Monday to Friday), which matters for working-day deadlines and SLAs. Because months vary in length and leap years add a day, the calculator works in whole calendar months and clamps sensibly — adding one month to 31 January lands on the last day of February, not an invalid date.\n\nEverything updates instantly, and you can share a link that reproduces the exact dates and interval you entered.",
+    faqs: [
+      {
+        q: "How do I find the number of days between two dates?",
+        a: "Choose the Difference mode and enter a start and end date. The calculator shows the gap as years, months and days, and also as the total number of days and weeks between them. The order doesn't matter — it tells you if the end date is before the start.",
+      },
+      {
+        q: "What counts as a business day?",
+        a: "Business days are Monday to Friday. The calculator counts the weekdays that elapse between your two dates, excluding Saturdays and Sundays. It does not account for public holidays, which vary by country.",
+      },
+      {
+        q: "How does adding months handle different month lengths?",
+        a: "It adds whole calendar months and clamps the day to the end of the target month when needed. For example, 31 January plus one month gives 28 February (or 29 in a leap year), since there is no 31 February.",
+      },
+      {
+        q: "Can I subtract time as well as add it?",
+        a: "Yes. In Add / Subtract mode, switch the direction to Subtract and enter any combination of years, months, weeks and days to move the date backwards. The result shows the new date and the day of the week it falls on.",
+      },
+    ],
   },
   {
     slug: "time-calculator",

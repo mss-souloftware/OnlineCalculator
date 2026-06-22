@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import {
   calculateCalories,
   GOALS,
@@ -46,45 +47,45 @@ const selectClass =
 export function CalorieCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    const w = parseFloat(p.get("weightKg") ?? "");
-    const h = parseFloat(p.get("heightCm") ?? "");
-    const a = parseFloat(p.get("age") ?? "");
-    if (Number.isFinite(w)) next.weightKg = w;
-    if (Number.isFinite(h)) next.heightCm = h;
-    if (Number.isFinite(a)) next.age = a;
-    const u = p.get("unit");
-    if (u === "metric" || u === "imperial") next.unit = u;
-    const g = p.get("gender");
-    if (g === "male" || g === "female") next.gender = g;
-    const act = p.get("activity");
-    if (act && ACTIVITY_LEVELS.some((x) => x.key === act)) next.activity = act;
-    const goal = p.get("goal");
-    if (goal && GOALS.some((x) => x.key === goal)) next.goal = goal;
-    const ms = p.get("macroSplit");
-    if (ms && ms in MACRO_SPLITS) next.macroSplit = ms as MacroSplit;
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      unit: inputs.unit,
-      weightKg: inputs.weightKg.toFixed(1),
-      heightCm: inputs.heightCm.toFixed(1),
-      age: String(inputs.age),
-      gender: inputs.gender,
-      activity: inputs.activity,
-      goal: inputs.goal,
-      macroSplit: inputs.macroSplit,
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      const w = parseFloat(p.get("weightKg") ?? "");
+      const h = parseFloat(p.get("heightCm") ?? "");
+      const a = parseFloat(p.get("age") ?? "");
+      if (Number.isFinite(w)) next.weightKg = w;
+      if (Number.isFinite(h)) next.heightCm = h;
+      if (Number.isFinite(a)) next.age = a;
+      const u = p.get("unit");
+      if (u === "metric" || u === "imperial") next.unit = u;
+      const g = p.get("gender");
+      if (g === "male" || g === "female") next.gender = g;
+      const act = p.get("activity");
+      if (act && ACTIVITY_LEVELS.some((x) => x.key === act)) next.activity = act;
+      const goal = p.get("goal");
+      if (goal && GOALS.some((x) => x.key === goal)) next.goal = goal;
+      const ms = p.get("macroSplit");
+      if (ms && ms in MACRO_SPLITS) next.macroSplit = ms as MacroSplit;
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams({
+        unit: state.unit,
+        weightKg: state.weightKg.toFixed(1),
+        heightCm: state.heightCm.toFixed(1),
+        age: String(state.age),
+        gender: state.gender,
+        activity: state.activity,
+        goal: state.goal,
+        macroSplit: state.macroSplit,
+      });
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(
     () =>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import { calculateBmi, type BmiCategory } from "@/lib/calculatorEngine/bmi";
 import { kgToLb, type UnitSystem } from "@/lib/calculatorEngine/units";
 import { BodyMetricsFields } from "@/components/calculators/health/BodyMetricsFields";
@@ -28,30 +29,30 @@ const CATEGORY_STYLE: Record<BmiCategory, string> = {
 export function BmiCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    const w = parseFloat(p.get("weightKg") ?? "");
-    const h = parseFloat(p.get("heightCm") ?? "");
-    const u = p.get("unit");
-    if (Number.isFinite(w)) next.weightKg = w;
-    if (Number.isFinite(h)) next.heightCm = h;
-    if (u === "metric" || u === "imperial") next.unit = u;
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      unit: inputs.unit,
-      weightKg: inputs.weightKg.toFixed(1),
-      heightCm: inputs.heightCm.toFixed(1),
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      const w = parseFloat(p.get("weightKg") ?? "");
+      const h = parseFloat(p.get("heightCm") ?? "");
+      const u = p.get("unit");
+      if (Number.isFinite(w)) next.weightKg = w;
+      if (Number.isFinite(h)) next.heightCm = h;
+      if (u === "metric" || u === "imperial") next.unit = u;
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams({
+        unit: state.unit,
+        weightKg: state.weightKg.toFixed(1),
+        heightCm: state.heightCm.toFixed(1),
+      });
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(
     () => calculateBmi(inputs.weightKg, inputs.heightCm),

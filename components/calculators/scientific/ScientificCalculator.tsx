@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { evaluate, type AngleMode } from "@/lib/calculatorEngine/scientific";
+import { useUrlState } from "@/lib/useUrlState";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
@@ -99,31 +100,31 @@ export function ScientificCalculator() {
   const [copied, setCopied] = useState(false);
   // After "=", the next value-key starts fresh while an operator chains on.
   const justEvaluated = useRef(false);
-  const hydrated = useRef(false);
 
-  // Hydrate from the URL (?expr=…&angle=…) — the shareable state.
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const expr = p.get("expr");
-    const a = p.get("angle");
-    if (expr) setExpression(expr);
-    if (a === "deg" || a === "rad") setAngle(a);
-    hydrated.current = true;
-  }, []);
-
-  // Mirror expression + angle back into the URL so a calculation is shareable.
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams();
-    if (expression) p.set("expr", expression);
-    p.set("angle", angle);
-    const query = p.toString();
-    window.history.replaceState(
-      null,
-      "",
-      query ? `${window.location.pathname}?${query}` : window.location.pathname,
-    );
-  }, [expression, angle]);
+  // Hydrate expression + angle from the URL (?expr=…&angle=…) and mirror changes
+  // back once the visitor edits — the URL stays clean until then.
+  const urlState = useMemo(() => ({ expression, angle }), [expression, angle]);
+  useUrlState(
+    urlState,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const a = p.get("angle");
+      return {
+        expression: p.get("expr") ?? "",
+        angle: a === "deg" || a === "rad" ? a : DEFAULT_ANGLE,
+      };
+    },
+    (s) => {
+      const p = new URLSearchParams();
+      if (s.expression) p.set("expr", s.expression);
+      p.set("angle", s.angle);
+      return p.toString();
+    },
+    (s) => {
+      setExpression(s.expression);
+      setAngle(s.angle);
+    },
+  );
 
   const result = useMemo(() => evaluate(expression, angle), [expression, angle]);
 

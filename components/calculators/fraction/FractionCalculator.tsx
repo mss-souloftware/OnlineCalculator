@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import {
   calculateFraction,
   fractionText,
@@ -65,26 +66,22 @@ function formatDecimal(n: number): string {
 export function FractionCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    setInputs(readParams());
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      aw: String(inputs.a.whole),
-      an: String(inputs.a.numerator),
-      ad: String(inputs.a.denominator),
-      bw: String(inputs.b.whole),
-      bn: String(inputs.b.numerator),
-      bd: String(inputs.b.denominator),
-      op: inputs.op,
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    readParams,
+    (state) =>
+      new URLSearchParams({
+        aw: String(state.a.whole),
+        an: String(state.a.numerator),
+        ad: String(state.a.denominator),
+        bw: String(state.b.whole),
+        bn: String(state.b.numerator),
+        bd: String(state.b.denominator),
+        op: state.op,
+      }).toString(),
+    setInputs,
+  );
 
   const result = useMemo(
     () => calculateFraction(inputs.a, inputs.b, inputs.op),

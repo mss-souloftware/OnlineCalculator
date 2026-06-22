@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import {
   calculateIdealWeight,
   type FrameSize,
@@ -30,33 +31,33 @@ const DEFAULTS: Inputs = {
 export function IdealWeightCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    const h = parseFloat(p.get("heightCm") ?? "");
-    if (Number.isFinite(h)) next.heightCm = h;
-    const u = p.get("unit");
-    if (u === "metric" || u === "imperial") next.unit = u;
-    const g = p.get("gender");
-    if (g === "male" || g === "female") next.gender = g;
-    const f = p.get("frame");
-    if (f === "small" || f === "medium" || f === "large") next.frame = f;
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams({
-      unit: inputs.unit,
-      gender: inputs.gender,
-      heightCm: inputs.heightCm.toFixed(1),
-      frame: inputs.frame,
-    });
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      const h = parseFloat(p.get("heightCm") ?? "");
+      if (Number.isFinite(h)) next.heightCm = h;
+      const u = p.get("unit");
+      if (u === "metric" || u === "imperial") next.unit = u;
+      const g = p.get("gender");
+      if (g === "male" || g === "female") next.gender = g;
+      const f = p.get("frame");
+      if (f === "small" || f === "medium" || f === "large") next.frame = f;
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams({
+        unit: state.unit,
+        gender: state.gender,
+        heightCm: state.heightCm.toFixed(1),
+        frame: state.frame,
+      });
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(() => calculateIdealWeight(inputs), [inputs]);
 

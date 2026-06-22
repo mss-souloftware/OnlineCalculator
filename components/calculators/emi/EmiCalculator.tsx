@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { calculateEmi } from "@/lib/calculatorEngine/emi";
+import { useUrlState } from "@/lib/useUrlState";
 import { formatCurrency, formatDuration } from "@/lib/format";
 import { RangeField } from "@/components/ui/RangeField";
 import { DonutChart } from "@/components/charts/DonutChart";
@@ -24,25 +25,25 @@ export function EmiCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [showAll, setShowAll] = useState(false);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    for (const key of KEYS) {
-      const v = parseFloat(p.get(key) ?? "");
-      if (Number.isFinite(v)) next[key] = v;
-    }
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams();
-    for (const key of KEYS) p.set(key, String(inputs[key]));
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back once the visitor edits a value.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      for (const key of KEYS) {
+        const v = parseFloat(p.get(key) ?? "");
+        if (Number.isFinite(v)) next[key] = v;
+      }
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams();
+      for (const key of KEYS) p.set(key, String(state[key]));
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(() => calculateEmi(inputs), [inputs]);
 

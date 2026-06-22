@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useUrlState } from "@/lib/useUrlState";
 import { calculateLoan } from "@/lib/calculatorEngine/loan";
 import { formatCurrency } from "@/lib/format";
 import { RangeField } from "@/components/ui/RangeField";
@@ -32,27 +33,26 @@ export function LoanCalculator() {
   const [activeType, setActiveType] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [copied, setCopied] = useState(false);
-  const hydrated = useRef(false);
-
-  // Hydrate from the URL (the shareable state).
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...DEFAULTS };
-    for (const key of PARAM_KEYS) {
-      const v = parseFloat(p.get(key) ?? "");
-      if (Number.isFinite(v)) next[key] = v;
-    }
-    setInputs(next);
-    hydrated.current = true;
-  }, []);
-
-  // Mirror inputs back into the URL (SOP: shareable, no reload).
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = new URLSearchParams();
-    for (const key of PARAM_KEYS) p.set(key, String(inputs[key]));
-    window.history.replaceState(null, "", `${window.location.pathname}?${p}`);
-  }, [inputs]);
+  // Hydrate from the URL and mirror changes back (the shareable state). The URL
+  // only starts reflecting inputs once the visitor changes something.
+  useUrlState(
+    inputs,
+    () => {
+      const p = new URLSearchParams(window.location.search);
+      const next = { ...DEFAULTS };
+      for (const key of PARAM_KEYS) {
+        const v = parseFloat(p.get(key) ?? "");
+        if (Number.isFinite(v)) next[key] = v;
+      }
+      return next;
+    },
+    (state) => {
+      const p = new URLSearchParams();
+      for (const key of PARAM_KEYS) p.set(key, String(state[key]));
+      return p.toString();
+    },
+    setInputs,
+  );
 
   const result = useMemo(() => calculateLoan(inputs), [inputs]);
 
