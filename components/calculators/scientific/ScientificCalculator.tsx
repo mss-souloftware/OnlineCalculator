@@ -249,7 +249,7 @@ export function ScientificCalculator() {
       <div className="lg:col-span-3">
         <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
           {/* Mode controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             <SegmentedControl
               ariaLabel="Angle unit"
               className="max-w-[12rem]"
@@ -260,33 +260,35 @@ export function ScientificCalculator() {
               value={angle}
               onChange={(v) => setAngle(v)}
             />
-            <button
-              type="button"
-              aria-pressed={hyp}
-              onClick={() => setHyp((v) => !v)}
-              className={cn(
-                "ml-auto inline-flex h-10 items-center rounded-lg border px-4 text-sm font-medium transition-colors",
+            <div className="ml-auto flex gap-2">
+              <button
+                type="button"
+                aria-pressed={hyp}
+                onClick={() => setHyp((v) => !v)}
+                className={cn(
+                  "inline-flex h-10 items-center rounded-lg border px-4 text-sm font-medium transition-colors",
+                  hyp
+                    ? "border-primary/40 bg-primary/10 text-primary"
+                    : "border-border text-muted hover:text-foreground",
+                )}
+              >
                 hyp
-                  ? "border-primary/40 bg-primary/10 text-primary"
-                  : "border-border text-muted hover:text-foreground",
-              )}
-            >
-              hyp
-            </button>
-            <button
-              type="button"
-              aria-pressed={inv}
-              onClick={() => setInv((v) => !v)}
-              className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-medium transition-colors",
-                inv
-                  ? "border-primary/40 bg-primary/10 text-primary"
-                  : "border-border text-muted hover:text-foreground",
-              )}
-            >
-              <Icon name="fa-arrows-up-down" className="text-xs" />
-              INV
-            </button>
+              </button>
+              <button
+                type="button"
+                aria-pressed={inv}
+                onClick={() => setInv((v) => !v)}
+                className={cn(
+                  "inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-medium transition-colors",
+                  inv
+                    ? "border-primary/40 bg-primary/10 text-primary"
+                    : "border-border text-muted hover:text-foreground",
+                )}
+              >
+                <Icon name="fa-arrows-up-down" className="text-xs" />
+                INV
+              </button>
+            </div>
           </div>
 
           {/* Display */}

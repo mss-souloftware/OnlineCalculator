@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { Clarity } from "@/components/analytics/Clarity";
 
 // Brand typography — Plus Jakarta Sans (display), Inter (UI), Roboto Mono (data).
 const jakarta = Plus_Jakarta_Sans({
@@ -93,14 +89,7 @@ export default function RootLayout({
           referrerPolicy="no-referrer"
         />
       </head>
-      <body className="flex min-h-full flex-col">
-        <ThemeProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </ThemeProvider>
-        <Clarity />
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

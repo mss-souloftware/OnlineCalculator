@@ -42,7 +42,10 @@ export function SegmentedControl<T extends string>({
             aria-checked={active}
             onClick={() => onChange(o.value)}
             className={cn(
-              "inline-flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              // min-w-0 lets the segments shrink below their text's intrinsic
+              // width (text wraps) so many-/long-labelled controls don't overflow
+              // narrow containers like a 300px embed column.
+              "inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md px-2.5 py-2 text-center text-sm font-medium transition-colors",
               active
                 ? "bg-gradient-to-t from-primary to-primary-to text-primary-foreground"
                 : "text-muted hover:text-foreground",

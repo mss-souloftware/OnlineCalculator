@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/icon";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { calculatorComponents } from "@/components/calculators/registry";
 import { ComingSoon } from "@/components/calculators/ComingSoon";
+import { EmbedTool } from "@/components/calculators/EmbedTool";
 import {
   calculatorHref,
   calculators,
@@ -108,6 +109,11 @@ export default async function CalculatorPage({ params }: Params) {
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {Component ? <Component /> : <ComingSoon calculator={calc} />}
+
+        {/* Let other sites embed this calculator (built tools only). */}
+        {Component && (
+          <EmbedTool category={calc.category} slug={calc.slug} name={calc.name} />
+        )}
 
         {/* SEO body content */}
         {calc.longDescription && (
